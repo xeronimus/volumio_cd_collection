@@ -1,0 +1,85 @@
+$green: #54c688;
+
+@import '../../../node_modules/purecss/build/pure-min.css';
+@import '../font/fontello.css';
+
+body {
+  color: #fff;
+  background: url('../images/darkness.jpg') center center / cover no-repeat rgb(51, 51, 51);
+  height: 100vh;
+  width: 100%;
+}
+
+.top-bar {
+  background-color: #090909;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+
+  button.pure-button {
+    font-size: 34px;
+    padding: 6px;
+    background: none;
+    color: #fff;
+
+    &.btn-play {
+    }
+
+    &.btn-pause {
+      color: $green;
+    }
+  }
+
+}
+
+.queue li.current-track {
+  font-weight: bold;
+}
+
+.trackinfo {
+
+  .album, .artist, .title {
+    padding: 2px 8px 0;
+    background-color: rgba(0, 0, 0, .6);
+  }
+  .album, .artist {
+    color: $green;
+  }
+
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  font-size: 22px;
+
+  img {
+    margin-top: 12px;
+    border: 10px solid rgba(0, 0, 0, .5);
+  }
+}
+
+.favoritesList {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  list-style-type: none;
+
+  li {
+
+    img {
+      width: 100px;
+      height: 100px
+    }
+
+  }
+
+}
