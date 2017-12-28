@@ -4,7 +4,7 @@ import {Provider} from 'react-redux';
 import {AppContainer} from 'react-hot-loader';
 import log from 'loglevel';
 
-import App from './components/App';
+import App from './views/App';
 import appConfig from './services/appConfig';
 import initialState from './store/initialState';
 import configureStore from './store/configureStore';
@@ -14,7 +14,7 @@ log.setLevel('debug');
 const store = configureStore(initialState);
 
 const addScript = document.createElement('script');
-addScript.setAttribute('src', `http://${appConfig.volumioBackend}/socket.io/socket.io.js`);
+addScript.setAttribute('src', `${appConfig.volumioBackend}/socket.io/socket.io.js`);
 document.body.appendChild(addScript);
 
 const render = (Component) => {
@@ -31,8 +31,8 @@ const render = (Component) => {
 addScript.onload = () => render(App);
 
 if (module.hot) {
-  module.hot.accept('./components/App', () => {
-    const newApp = require('./components/App').default;
+  module.hot.accept('./views/App', () => {
+    const newApp = require('./views/App').default;
     render(newApp);
   });
 }

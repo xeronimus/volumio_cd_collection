@@ -8,25 +8,77 @@ body {
   background: url('../images/darkness.jpg') center center / cover no-repeat rgb(51, 51, 51);
   height: 100vh;
   width: 100%;
+  overflow: hidden;
+}
+
+a {
+  color: #fff;
+}
+
+@mixin shadowed() {
+  padding: 2px 8px 0;
+  background-color: rgba(0, 0, 0, .4);
+}
+
+button.pure-button {
+  font-size: 34px;
+  padding: 6px;
+  background: none;
+  color: #fff;
+  border-radius: 0;
+
+  &.active {
+    color: $green;
+  }
 }
 
 .top-bar {
   background-color: #090909;
   color: #fff;
   display: flex;
-  justify-content: center;
+
+  &.player-top-bar {
+    justify-content: center;
+  }
+  &.library-top-bar {
+    justify-content: flex-start;
+  }
+
+  .player-buttons {
+    position: relative;
+  }
+
+  .play-button-wrapper {
+    background: black;
+    width: 78px;
+    height: 78px;
+    position: absolute;
+    left: 50%;
+    margin-left: -39px;
+    top: 0;
+    border-radius: 50%;
+    text-align: center;
+    padding-top: 5px;
+    box-sizing: border-box;
+  }
 
   button.pure-button {
-    font-size: 34px;
-    padding: 6px;
-    background: none;
-    color: #fff;
 
-    &.btn-play {
+    &.btn-prev, &.btn-next {
+      margin: 0 28px;
     }
 
-    &.btn-pause {
+    &.btn-pause, &.btn-play {
       color: $green;
+      border: 3px solid $green;
+      border-radius: 50%;
+      height: 64px;
+      width: 64px;
+    }
+
+    &.btn-library {
+      position: absolute;
+      right: 8px;
     }
   }
 
@@ -36,50 +88,74 @@ body {
   font-weight: bold;
 }
 
-.trackinfo {
-
-  .album, .artist, .title {
-    padding: 2px 8px 0;
-    background-color: rgba(0, 0, 0, .6);
-  }
-  .album, .artist {
-    color: $green;
-  }
-
-  margin-top: 24px;
+.main {
+  margin-top: 30px;
   display: flex;
+  flex-direction: row;
   justify-content: center;
-  flex-direction: column;
-  align-items: center;
   font-size: 22px;
 
-  img {
-    margin-top: 12px;
-    border: 10px solid rgba(0, 0, 0, .5);
+  .timr {
+    @include shadowed();
+  }
+
+  .column {
+    padding: 20px 40px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+  .column.right-column, .column.left-column {
+    width: 124px;
+  }
+  .column.right-column {
+    flex-direction: column;
+    button {
+      font-size: 24px;
+      @include shadowed();
+    }
+  }
+
+  .trackinfo {
+    flex-grow: 1;
+
+    .album, .artist, .title {
+      @include shadowed();
+    }
+
+    .album, .artist {
+      color: $green;
+    }
+
+    img {
+      max-width: 250px;
+      margin: 12px 0;
+      border: 10px solid rgba(0, 0, 0, .5);
+    }
   }
 }
 
 .favoritesList {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  margin-top: 40px;
 
-  display: flex;
-  margin: 0;
-  padding: 0;
-  overflow-x: auto;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  list-style-type: none;
+  ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    list-style-type: none;
 
-  li {
+    li {
+      padding: 0 6px;
 
-    img {
-      width: 100px;
-      height: 100px
+      img {
+        width: 200px;
+        height: 200px
+      }
+
     }
-
   }
 
 }
