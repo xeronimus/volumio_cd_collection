@@ -12,7 +12,7 @@ const FavoritesList = ({favoriteAlbums, onFavoriteClick}) => {
 
   return (
     <div className="favoritesList">
-      <Scrollbars style={{height: '210px'}}>
+      <Scrollbars autoHeight autoHeightMax={500}>
         <ul >
           {
             sortedFavorites.map((favorite) => <FavoritesListItem key={favorite.uri} favorite={favorite}
@@ -27,6 +27,7 @@ const FavoritesList = ({favoriteAlbums, onFavoriteClick}) => {
 const FavoritesListItem = ({favorite, onFavoriteClick}) => (
   <li onClick={() => onFavoriteClick(favorite.uri)}>
     <CoverImg albumArt={favorite.albumart}/>
+    <div className="favorite-title">{favorite.artist} - {favorite.title}</div>
   </li>
 );
 

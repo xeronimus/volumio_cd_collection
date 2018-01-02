@@ -67,7 +67,7 @@ const rootReducer = (state = {}, action = {}) => {
         volumioQueue: action.volumioQueue
       };
     case VOLUMIO_STATE_UPDATE: {
-      const {status, title, artist, album, albumart, uri, seek, duration, volume, mute, position, random} = action.volumioState;
+      const {status, title, artist, album, albumart, uri, seek, duration, volume, mute, position, random, repeat} = action.volumioState;
       return {
         ...state,
         volumioState: {
@@ -82,7 +82,8 @@ const rootReducer = (state = {}, action = {}) => {
           volume,
           mute,
           position,
-          random
+          random,
+          repeat
         }
       };
     }

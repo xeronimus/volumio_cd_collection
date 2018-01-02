@@ -82,3 +82,6 @@ export const volumeDown = () => () => {
 export const setShuffle = (setShuffleOnFlag) => () => {
   volumio.command('setRandom', {value: !!setShuffleOnFlag});
 };
+export const setRepeat = (setRepeatOnFlag) => () => {
+  volumio.command('setRepeat', {value: !!setRepeatOnFlag});
+};

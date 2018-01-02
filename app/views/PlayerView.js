@@ -4,12 +4,12 @@ import {connect} from 'react-redux';
 import PlayerTopBar from '../components/PlayerTopBar';
 import CoverImg from '../components/CoverImg';
 import Timr from '../components/Timr';
-import {volumeUp, volumeDown, setShuffle} from '../actions';
+import {volumeUp, volumeDown, setShuffle, setRepeat} from '../actions';
 
 /**
  *
  */
-const PlayerView = ({volumioState, volumeUp, volumeDown, setShuffle}) => {
+const PlayerView = ({volumioState, volumeUp, volumeDown, setShuffle, setRepeat}) => {
 
   return (
     <div className="view player-view">
@@ -42,6 +42,10 @@ const PlayerView = ({volumioState, volumeUp, volumeDown, setShuffle}) => {
                     onClick={toggleShuffle}>
               <i className="icon icon-shuffle"></i>
             </button>
+            <button type="button" className={`pure-button ${volumioState.repeat ? 'active' : ''}`}
+                    onClick={toggleRepeat}>
+              <i className="icon icon-cw"></i>
+            </button>
           </div>
         </div>
 
@@ -53,11 +57,15 @@ const PlayerView = ({volumioState, volumeUp, volumeDown, setShuffle}) => {
     setShuffle(!volumioState.random);
   }
 
+  function toggleRepeat() {
+    setRepeat(!volumioState.repeat);
+  }
+
 };
 
 export default connect(
   (state) => ({
     volumioState: state.volumioState
   }),
-  {volumeUp, volumeDown, setShuffle}
+  {volumeUp, volumeDown, setShuffle, setRepeat}
 )(PlayerView);
