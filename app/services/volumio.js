@@ -1,7 +1,6 @@
-/* global io */
-
 import Promise from 'bluebird';
 import {bindActionCreators} from 'redux';
+import io from 'socket.io-client';
 
 import appConfig from './appConfig';
 
@@ -24,10 +23,6 @@ export function initialize(dispatch) {
     volumioAlbumList
   }, dispatch);
 
-  if (!io) {
-    throw new Error('Socket.io library not present!');
-  }
-
   const volumio = {
     connect,
     command
@@ -35,11 +30,17 @@ export function initialize(dispatch) {
   return volumio;
 
   function connect() {
+
     // open connection to Volumio backend
     const socket = io(appConfig.volumioBackend);
     volumio.socket = socket;
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
+
+      socket.on('connect_error', (err) => reject(new Error(err)));
+
+      socket.on('connect_timeout', (err) => reject(new Error(err)));
+
       socket.on('connect', () => {
         // make sure we get the current volumio state
         socket.emit('getState');
@@ -65,11 +66,11 @@ export function initialize(dispatch) {
       socket.on('disconnect', () => actions.volumioDisconnect);
 
     });
+
   }
 
   function command(command, payload) {
     volumio.socket.emit(command, payload);
   }
-
 
 }

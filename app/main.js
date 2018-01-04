@@ -5,17 +5,12 @@ import {AppContainer} from 'react-hot-loader';
 import log from 'loglevel';
 
 import App from './views/App';
-import appConfig from './services/appConfig';
 import initialState from './store/initialState';
 import configureStore from './store/configureStore';
 
 log.setLevel('debug');
 
 const store = configureStore(initialState);
-
-const addScript = document.createElement('script');
-addScript.setAttribute('src', `${appConfig.volumioBackend}/socket.io/socket.io.js`);
-document.body.appendChild(addScript);
 
 const render = (Component) => {
   ReactDOM.render(
@@ -28,7 +23,7 @@ const render = (Component) => {
   );
 };
 
-addScript.onload = () => render(App);
+render(App);
 
 if (module.hot) {
   module.hot.accept('./views/App', () => {

@@ -4,6 +4,7 @@ import filterForFavorites from '../services/filterForFavorites';
 import {
   VOLUMIO_ALBUM_LIST,
   VOLUMIO_CONNECT,
+  VOLUMIO_CONNECT_ERROR,
   VOLUMIO_DISCONNECT,
   VOLUMIO_STATE_UPDATE,
   VOLUMIO_QUEUE_UPDATE,
@@ -66,13 +67,24 @@ const rootReducer = (state = {}, action = {}) => {
     case VOLUMIO_CONNECT:
       return {
         ...state,
-        connected: true
+        volumioConnected: true,
+        volumioConnectError: undefined
       };
+
     case VOLUMIO_DISCONNECT:
       return {
         ...state,
-        connected: false
+        volumioConnected: false,
+        volumioConnectError: undefined
       };
+
+    case VOLUMIO_CONNECT_ERROR:
+      return {
+        ...state,
+        volumioConnected: false,
+        volumioConnectError: action.error
+      };
+
     case VOLUMIO_QUEUE_UPDATE:
       return {
         ...state,

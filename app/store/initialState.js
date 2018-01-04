@@ -4,6 +4,8 @@ import {V_PLAYER} from '../views';
  * The initial state that is loaded into the redux store on (client) application load.
  */
 const INITIAL_STATE = {
+  volumioConnected: false,
+  volumioConnectError: undefined,
   volumioQueue: [],
   volumioState: {},
   currentView: V_PLAYER,

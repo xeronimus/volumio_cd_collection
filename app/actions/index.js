@@ -1,8 +1,10 @@
 import axios from 'axios';
 import {initialize as initializeVolumio} from '../services/volumio';
+import log from 'loglevel';
 
 import {
   VOLUMIO_CONNECT,
+  VOLUMIO_CONNECT_ERROR,
   VOLUMIO_DISCONNECT,
   VOLUMIO_STATE_UPDATE,
   VOLUMIO_QUEUE_UPDATE,
@@ -16,22 +18,35 @@ let volumio;
 
 
 export const connectToBackend = () => (dispatch) => {
+
+  dispatch({type: VOLUMIO_DISCONNECT});
+
   // init websocket connection
   volumio = initializeVolumio(dispatch);
-  volumio.connect().then(() => dispatch({type: VOLUMIO_CONNECT}));
+  volumio.connect()
+    .then(() => {
+      dispatch({type: VOLUMIO_CONNECT});
+      // load favorites list
+      // github personal access token "volumio_cd_collection"    3d7efb621ecf8246d0470464c5a351f28cf6801c
 
-  // load favorites list
-  // github personal access token "volumio_cd_collection"    3d7efb621ecf8246d0470464c5a351f28cf6801c
+      return axios.get('https://api.github.com/gists/210058969b7cf59c1aa7edf8e18eb279', {
+        auth: {
+          username: '3d7efb621ecf8246d0470464c5a351f28cf6801c'
+        }
+      });
 
-  axios.get('https://api.github.com/gists/210058969b7cf59c1aa7edf8e18eb279',{
-    auth: {
-      username: '3d7efb621ecf8246d0470464c5a351f28cf6801c'
-    }
-  }).then((response) => {
-    if (response.status === 200) {
-      dispatch({type: FAVORITES_LOADED, data: response.data.files});
-    }
-  });
+    })
+    .then((favoritesResponse) => {
+      if (favoritesResponse.status === 200) {
+        dispatch({type: FAVORITES_LOADED, data: favoritesResponse.data.files});
+      } else {
+        // TODO: inform user?  toast message?
+        log.error('Could not fetch favorites from gist / github', favoritesResponse.status);
+      }
+    })
+    .catch((error) => dispatch({type: VOLUMIO_CONNECT_ERROR, error}));
+
+
 };
 
 export const volumioStateUpdate = (volumioState) => ({
