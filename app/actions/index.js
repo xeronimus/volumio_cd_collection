@@ -11,7 +11,8 @@ import {
   VOLUMIO_ALBUM_LIST,
   FAVORITES_LOADED,
   CURRENT_VIEW,
-  TOGGLE_TIMR_COUNTDOWN
+  TOGGLE_TIMR_COUNTDOWN,
+  TOGGLE_TRACKLIST
 } from '../actions/types';
 
 let volumio;
@@ -76,8 +77,13 @@ export const setCurrentView = (view) => ({
 export const toggleTimrCountdown = () => ({
   type: TOGGLE_TIMR_COUNTDOWN
 });
+export const toggleTracklist = () => ({
+  type: TOGGLE_TRACKLIST
+});
 
-
+export const jumpToQueuePosition = (index) => () => {
+  volumio.command('play', {value: index});
+};
 export const playUri = (uri) => () => {
   volumio.command('replaceAndPlay', {uri});
 };

@@ -13,7 +13,7 @@ import img from '../assets/images/volumio-logo.png';
 const PlayerTopBar = ({playerStatus, prevTrackInQueue, nextTrackInQueue, setCurrentView}) => {
   return (
     <div className="top-bar player-top-bar">
-      <img src={img}/>
+      <img src={img} onClick={() => location.reload()}/>
 
       <div className="player-buttons">
 

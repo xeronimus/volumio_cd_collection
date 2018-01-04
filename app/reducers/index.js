@@ -10,7 +10,8 @@ import {
   VOLUMIO_QUEUE_UPDATE,
   FAVORITES_LOADED,
   CURRENT_VIEW,
-  TOGGLE_TIMR_COUNTDOWN
+  TOGGLE_TIMR_COUNTDOWN,
+  TOGGLE_TRACKLIST
 } from '../actions/types';
 
 const rootReducer = (state = {}, action = {}) => {
@@ -61,6 +62,13 @@ const rootReducer = (state = {}, action = {}) => {
       return {
         ...state,
         timrCountdown: !state.timrCountdown
+      };
+    }
+
+    case TOGGLE_TRACKLIST: {
+      return {
+        ...state,
+        showTracklist: !state.showTracklist
       };
     }
 

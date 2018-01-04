@@ -9,7 +9,8 @@ const INITIAL_STATE = {
   volumioQueue: [],
   volumioState: {},
   currentView: V_PLAYER,
-  timrCountdown: false
+  timrCountdown: false, // if true, show song timer in "countdown" mode
+  showTracklist: false // if true, display an overlay with the current tracklist  (playlist)
 };
 
 export default INITIAL_STATE;

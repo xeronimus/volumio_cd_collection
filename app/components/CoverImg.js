@@ -5,9 +5,9 @@ import appConfig from '../services/appConfig';
 /**
  *
  */
-const CoverImg = ({albumArt}) => {
+const CoverImg = ({albumArt, onClick}) => {
   if (albumArt) {
-    return (  <img src={`${appConfig.volumioBackend + '' + albumArt}`}/> );
+    return (  <img src={`${appConfig.volumioBackend + '' + albumArt}`} onClick={onClick}/> );
   } else {
     return <span />;
   }
