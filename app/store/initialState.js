@@ -6,7 +6,8 @@ import {V_PLAYER} from '../views';
 const INITIAL_STATE = {
   volumioQueue: [],
   volumioState: {},
-  currentView: V_PLAYER
+  currentView: V_PLAYER,
+  timrCountdown: false
 };
 
 export default INITIAL_STATE;

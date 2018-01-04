@@ -54,9 +54,20 @@ class Timr extends React.Component {
   }
 
   render() {
+
+    const {countdown, duration, onTimrClick} = this.props;
+    const {seek} = this.state;
+
     return (
-      <div className="timr">
-        {formatDate(new Date(this.state.seek), 'mm:ss')}
+      <div className="timr" onClick={onTimrClick}>
+        {
+          !countdown &&
+          formatDate(new Date(seek), 'mm:ss')
+        }
+        {
+          countdown &&
+          `- ${formatDate(new Date(duration * 1000 - seek), 'mm:ss')}`
+        }
       </div>
     );
   }

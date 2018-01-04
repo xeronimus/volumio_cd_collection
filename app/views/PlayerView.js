@@ -4,12 +4,12 @@ import {connect} from 'react-redux';
 import PlayerTopBar from '../components/PlayerTopBar';
 import CoverImg from '../components/CoverImg';
 import Timr from '../components/Timr';
-import {volumeUp, volumeDown, setShuffle, setRepeat} from '../actions';
+import {volumeUp, volumeDown, setShuffle, setRepeat, toggleTimrCountdown} from '../actions';
 
 /**
  *
  */
-const PlayerView = ({volumioState, volumeUp, volumeDown, setShuffle, setRepeat}) => {
+const PlayerView = ({volumioState, timrCountdown, volumeUp, volumeDown, setShuffle, setRepeat, toggleTimrCountdown}) => {
 
   return (
     <div className="view player-view">
@@ -19,7 +19,8 @@ const PlayerView = ({volumioState, volumeUp, volumeDown, setShuffle, setRepeat})
       <div className="main">
 
         <div className="column left-column">
-          <Timr seek={volumioState.seek} pause={volumioState.status !== 'play'}/>
+          <Timr seek={volumioState.seek} pause={volumioState.status !== 'play'} duration={volumioState.duration}
+                countdown={timrCountdown} onTimrClick={toggleTimrCountdown}/>
         </div>
 
         <div className="column trackinfo">
@@ -29,6 +30,11 @@ const PlayerView = ({volumioState, volumeUp, volumeDown, setShuffle, setRepeat})
         </div>
 
         <div className="column right-column">
+          <div>
+            <div className="volume-bar">
+              <div className="volume-bar-inner" style={{width: `${volumioState.volume}%`}}></div>
+            </div>
+          </div>
           <div>
             <button type="button" className="pure-button" onClick={volumeDown}>
               <i className="icon icon-volume-down"></i>
@@ -65,7 +71,8 @@ const PlayerView = ({volumioState, volumeUp, volumeDown, setShuffle, setRepeat})
 
 export default connect(
   (state) => ({
-    volumioState: state.volumioState
+    volumioState: state.volumioState,
+    timrCountdown: state.timrCountdown
   }),
-  {volumeUp, volumeDown, setShuffle, setRepeat}
+  {volumeUp, volumeDown, setShuffle, setRepeat, toggleTimrCountdown}
 )(PlayerView);

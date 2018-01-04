@@ -12,7 +12,7 @@ const packageJson = require('./package.json');
  */
 const appConfigPlugin = new webpack.DefinePlugin({
   __APP_CONFIG__: JSON.stringify({
-    volumioBackend:'http://192.168.0.13',
+    volumioBackend:'http://192.168.0.25',
     env: 'dev',
     version: packageJson.version + '-dev',
     buildTime: new Date().getTime()

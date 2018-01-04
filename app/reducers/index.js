@@ -8,7 +8,8 @@ import {
   VOLUMIO_STATE_UPDATE,
   VOLUMIO_QUEUE_UPDATE,
   FAVORITES_LOADED,
-  CURRENT_VIEW
+  CURRENT_VIEW,
+  TOGGLE_TIMR_COUNTDOWN
 } from '../actions/types';
 
 const rootReducer = (state = {}, action = {}) => {
@@ -47,8 +48,19 @@ const rootReducer = (state = {}, action = {}) => {
         };
       }
     }
+
     case CURRENT_VIEW : {
-      return {...state, currentView: action.view};
+      return {
+        ...state,
+        currentView: action.view
+      };
+    }
+
+    case TOGGLE_TIMR_COUNTDOWN : {
+      return {
+        ...state,
+        timrCountdown: !state.timrCountdown
+      };
     }
 
     case VOLUMIO_CONNECT:

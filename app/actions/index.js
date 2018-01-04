@@ -8,7 +8,8 @@ import {
   VOLUMIO_QUEUE_UPDATE,
   VOLUMIO_ALBUM_LIST,
   FAVORITES_LOADED,
-  CURRENT_VIEW
+  CURRENT_VIEW,
+  TOGGLE_TIMR_COUNTDOWN
 } from '../actions/types';
 
 let volumio;
@@ -55,6 +56,10 @@ export const volumioDisconnect = () => ({
 export const setCurrentView = (view) => ({
   type: CURRENT_VIEW,
   view
+});
+
+export const toggleTimrCountdown = () => ({
+  type: TOGGLE_TIMR_COUNTDOWN
 });
 
 

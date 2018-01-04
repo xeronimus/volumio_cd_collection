@@ -10,7 +10,6 @@ const LibraryTopBar = ({setCurrentView}) => {
   return (
     <div className="top-bar library-top-bar">
 
-
       <button type="button" className="pure-button" onClick={setCurrentView.bind(undefined, V_PLAYER)}>
         <i className="icon icon-left-open"></i>
       </button>

@@ -5,6 +5,7 @@ import PlayButton from './PlayButton';
 import PauseButton from './PauseButton';
 import {V_LIBRARY} from '../views';
 import {prevTrackInQueue, nextTrackInQueue, setCurrentView} from '../actions';
+import img from '../assets/images/volumio-logo.png';
 
 /**
  * The PlayerTopBar (Header), containing play/pause, next/prev buttons
@@ -12,6 +13,7 @@ import {prevTrackInQueue, nextTrackInQueue, setCurrentView} from '../actions';
 const PlayerTopBar = ({playerStatus, prevTrackInQueue, nextTrackInQueue, setCurrentView}) => {
   return (
     <div className="top-bar player-top-bar">
+      <img src={img}/>
 
       <div className="player-buttons">
 
