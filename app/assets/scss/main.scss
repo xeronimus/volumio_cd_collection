@@ -3,16 +3,17 @@ $green: #54c688;
 @import '../../../node_modules/purecss/build/pure-min.css';
 @import '../font/fontello.css';
 
-html, * {
-  cursor: none !important;
-}
-
 body {
   color: #fff;
   background: url('../images/darkness.jpg') center center / cover no-repeat rgb(51, 51, 51);
   height: 100vh;
   width: 100%;
   overflow: hidden;
+
+  &.prod, &.prod * {
+    // in production environment, we want to hide the cursor (touch screen)
+    cursor: none !important;
+  }
 }
 
 a {

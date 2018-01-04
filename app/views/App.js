@@ -16,6 +16,10 @@ class App extends React.Component {
     this.props.connectToBackend();
   }
 
+  componentDidMount() {
+    document.body.classList.toggle(appConfig.env, true);
+  }
+
   render() {
     const {currentView, volumioConnected, volumioConnectError, connectToBackend} = this.props;
 
