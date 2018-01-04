@@ -2,6 +2,7 @@ import axios from 'axios';
 import {initialize as initializeVolumio} from '../services/volumio';
 import log from 'loglevel';
 
+import appConfig from '../services/appConfig';
 import {
   VOLUMIO_CONNECT,
   VOLUMIO_CONNECT_ERROR,
@@ -32,7 +33,7 @@ export const connectToBackend = () => (dispatch) => {
 
       return axios.get('https://api.github.com/gists/210058969b7cf59c1aa7edf8e18eb279', {
         auth: {
-          username: '3d7efb621ecf8246d0470464c5a351f28cf6801c'
+          username: appConfig.githubAccessToken
         }
       });
 

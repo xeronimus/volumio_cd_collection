@@ -11,6 +11,7 @@ const packageJson = require('./package.json');
 const appConfigPlugin = new webpack.DefinePlugin({
   __APP_CONFIG__: JSON.stringify({
     volumioBackend: '',
+    githubAccessToken:'',
     env: 'prod',
     version: packageJson.version,
     buildTime: new Date().getTime()
