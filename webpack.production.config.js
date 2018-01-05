@@ -4,140 +4,142 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const packageJson = require('./package.json');
 
-/**
- * The variable __APP_CONFIG__ will be available on the global scope.
- * Contains env/build dependent information. (e.g. to adjust log-level)
- */
-const appConfigPlugin = new webpack.DefinePlugin({
-  __APP_CONFIG__: JSON.stringify({
-    volumioBackend: '',
-    githubAccessToken:'',
-    env: 'prod',
-    version: packageJson.version,
-    buildTime: new Date().getTime()
-  })
-});
+module.exports = (env) => {
+  /**
+   * The variable __APP_CONFIG__ will be available on the global scope.
+   * Contains env/build dependent information. (e.g. to adjust log-level)
+   */
+  const appConfigPlugin = new webpack.DefinePlugin({
+    __APP_CONFIG__: JSON.stringify({
+      volumioBackend: '',
+      gitHubAccessToken: env.gitHubAccessToken,
+      env: 'prod',
+      version: packageJson.version,
+      buildTime: new Date().getTime()
+    })
+  });
 
-const config = {
-  devtool: 'cheap-module-source-map',
+  const config = {
+    devtool: 'cheap-module-source-map',
 
-  entry: [
-    './main.js',
-    './assets/scss/main.scss',
-  ],
+    entry: [
+      './main.js',
+      './assets/scss/main.scss',
+    ],
 
-  context: resolve(__dirname, 'app'),
+    context: resolve(__dirname, 'app'),
 
-  output: {
-    filename: 'bundle.js',
-    path: resolve(__dirname, 'dist'),
-    publicPath: '',
-  },
+    output: {
+      filename: 'bundle.js',
+      path: resolve(__dirname, 'dist'),
+      publicPath: '',
+    },
 
-  plugins: [
-    new webpack.optimize.ModuleConcatenationPlugin(),
-    new HtmlWebpackPlugin({
-      template: `${__dirname}/app/index.html`,
-      filename: 'index.html',
-      inject: 'body',
-    }),
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-      debug: false,
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      beautify: false
-    }),
-    new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify('production')}}),
-    new ExtractTextPlugin({filename: './styles/style.css', disable: false, allChunks: true}),
-    appConfigPlugin
-  ],
+    plugins: [
+      new webpack.optimize.ModuleConcatenationPlugin(),
+      new HtmlWebpackPlugin({
+        template: `${__dirname}/app/index.html`,
+        filename: 'index.html',
+        inject: 'body',
+      }),
+      new webpack.optimize.OccurrenceOrderPlugin(),
+      new webpack.LoaderOptionsPlugin({
+        minimize: true,
+        debug: false,
+      }),
+      new webpack.optimize.UglifyJsPlugin({
+        beautify: false
+      }),
+      new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify('production')}}),
+      new ExtractTextPlugin({filename: './styles/style.css', disable: false, allChunks: true}),
+      appConfigPlugin
+    ],
 
-  module: {
-    loaders: [
-      {
-        test: /\.js?$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader',
-      },
-      {
-        test: /\.scss$/,
-        exclude: /node_modules/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
+    module: {
+      loaders: [
+        {
+          test: /\.js?$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+        },
+        {
+          test: /\.scss$/,
+          exclude: /node_modules/,
+          use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: [
+              'css-loader',
+              {loader: 'sass-loader', query: {sourceMap: false}},
+            ],
+            publicPath: '../'
+          }),
+        },
+        {
+          test: /\.(png|jpg|gif)$/,
           use: [
-            'css-loader',
-            {loader: 'sass-loader', query: {sourceMap: false}},
+            {
+              loader: 'url-loader',
+              options: {
+                limit: 8192,
+                mimetype: 'image/png',
+                name: 'images/[name].[ext]',
+              }
+            }
           ],
-          publicPath: '../'
-        }),
-      },
-      {
-        test: /\.(png|jpg|gif)$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 8192,
-              mimetype: 'image/png',
-              name: 'images/[name].[ext]',
+        },
+        {
+          test: /\.eot(\?v=\d+.\d+.\d+)?$/,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                name: 'fonts/[name].[ext]'
+              }
             }
-          }
-        ],
-      },
-      {
-        test: /\.eot(\?v=\d+.\d+.\d+)?$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: 'fonts/[name].[ext]'
+          ],
+        },
+        {
+          test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+          use: [
+            {
+              loader: 'url-loader',
+              options: {
+                limit: 8192,
+                mimetype: 'application/font-woff',
+                name: 'fonts/[name].[ext]',
+              }
             }
-          }
-        ],
-      },
-      {
-        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 8192,
-              mimetype: 'application/font-woff',
-              name: 'fonts/[name].[ext]',
+          ],
+        },
+        {
+          test: /\.[ot]tf(\?v=\d+.\d+.\d+)?$/,
+          use: [
+            {
+              loader: 'url-loader',
+              options: {
+                limit: 8192,
+                mimetype: 'application/octet-stream',
+                name: 'fonts/[name].[ext]',
+              }
             }
-          }
-        ],
-      },
-      {
-        test: /\.[ot]tf(\?v=\d+.\d+.\d+)?$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 8192,
-              mimetype: 'application/octet-stream',
-              name: 'fonts/[name].[ext]',
+          ],
+        },
+        {
+          test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+          use: [
+            {
+              loader: 'url-loader',
+              options: {
+                limit: 8192,
+                mimetype: 'image/svg+xml',
+                name: 'images/[name].[ext]',
+              }
             }
-          }
-        ],
-      },
-      {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 8192,
-              mimetype: 'image/svg+xml',
-              name: 'images/[name].[ext]',
-            }
-          }
-        ],
-      },
-    ]
-  },
-};
+          ],
+        },
+      ]
+    },
+  };
 
-module.exports = config;
+  return config;
+};

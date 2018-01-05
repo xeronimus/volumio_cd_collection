@@ -33,7 +33,7 @@ export const connectToBackend = () => (dispatch) => {
 
       return axios.get('https://api.github.com/gists/210058969b7cf59c1aa7edf8e18eb279', {
         auth: {
-          username: appConfig.githubAccessToken
+          username: appConfig.gitHubAccessToken
         }
       });
 
