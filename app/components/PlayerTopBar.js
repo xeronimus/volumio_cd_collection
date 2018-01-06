@@ -1,16 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import PlayButton from './PlayButton';
 import PauseButton from './PauseButton';
 import {V_LIBRARY} from '../views';
-import {prevTrackInQueue, nextTrackInQueue, setCurrentView} from '../actions';
+import {prevTrackInQueue, nextTrackInQueue, setCurrentView, lockUi} from '../actions';
 import img from '../assets/images/volumio-logo.png';
 
 /**
  * The PlayerTopBar (Header), containing play/pause, next/prev buttons
  */
-const PlayerTopBar = ({playerStatus, prevTrackInQueue, nextTrackInQueue, setCurrentView}) => {
+const PlayerTopBar = ({playerStatus, prevTrackInQueue, nextTrackInQueue, setCurrentView, lockUi}) => {
   return (
     <div className="top-bar player-top-bar">
       <img src={img} onClick={() => location.reload()}/>
@@ -36,17 +37,30 @@ const PlayerTopBar = ({playerStatus, prevTrackInQueue, nextTrackInQueue, setCurr
         </button>
       </div>
 
-      <button type="button" className="pure-button btn-library" onClick={setCurrentView.bind(undefined, V_LIBRARY)}>
-        <i className="icon icon-music"></i>
-      </button>
+      <div className="quick-menu">
+        <button type="button" className="pure-button btn-lock" onClick={lockUi}>
+          <i className="icon icon-lock"></i>
+        </button>
+        <button type="button" className="pure-button btn-library" onClick={setCurrentView.bind(undefined, V_LIBRARY)}>
+          <i className="icon icon-music"></i>
+        </button>
+      </div>
 
     </div>
   );
 };
 
+PlayerTopBar.propTypes = {
+  playerStatus: PropTypes.string,
+  prevTrackInQueue: PropTypes.func.isRequired,
+  nextTrackInQueue: PropTypes.func.isRequired,
+  setCurrentView: PropTypes.func.isRequired,
+  lockUi: PropTypes.func.isRequired
+};
+
 export default connect(
   (state) => ({
-    playerStatus: state.volumioState && state.volumioState.status
+    playerStatus: state.volumio.volumioState && state.volumio.volumioState.status
   }),
-  {prevTrackInQueue, nextTrackInQueue, setCurrentView}
+  {prevTrackInQueue, nextTrackInQueue, setCurrentView, lockUi}
 )(PlayerTopBar);

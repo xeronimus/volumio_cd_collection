@@ -15,6 +15,7 @@ module.exports = (env) => {
   const appConfigPlugin = new webpack.DefinePlugin({
     __APP_CONFIG__: JSON.stringify({
       volumioBackend: 'http://192.168.0.25',
+      // volumioBackend: 'http://localhost:9999',
       gitHubAccessToken: env.gitHubAccessToken,
       env: 'dev',
       version: packageJson.version + '-dev',
@@ -23,7 +24,7 @@ module.exports = (env) => {
   });
 
 
-  const config = {
+  return {
     devtool: 'cheap-module-eval-source-map',
 
     entry: [
@@ -164,7 +165,6 @@ module.exports = (env) => {
     ],
   };
 
-  return config;
 };
 
 

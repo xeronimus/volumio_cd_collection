@@ -77,6 +77,12 @@
       "css": "cw",
       "code": 59403,
       "src": "elusive"
+    },
+    {
+      "uid": "0e26e70b4aa537cc206f41b21dcf2fcc",
+      "css": "lock",
+      "code": 59404,
+      "src": "elusive"
     }
   ]
 }

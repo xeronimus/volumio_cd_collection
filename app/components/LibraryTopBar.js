@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import {V_PLAYER} from '../views';
@@ -16,6 +17,10 @@ const LibraryTopBar = ({setCurrentView}) => {
 
     </div>
   );
+};
+
+LibraryTopBar.propTypes = {
+  setCurrentView: PropTypes.func.isRequired
 };
 
 export default connect(

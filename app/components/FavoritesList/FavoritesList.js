@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Scrollbars} from 'react-custom-scrollbars';
 
-import CoverImg from './CoverImg';
+import FavoritesListItem from './FavoritesListItem';
 
 /**
  *
@@ -24,11 +25,9 @@ const FavoritesList = ({favoriteAlbums, onFavoriteClick}) => {
   );
 };
 
-const FavoritesListItem = ({favorite, onFavoriteClick}) => (
-  <li onClick={() => onFavoriteClick(favorite.uri)}>
-    <CoverImg albumArt={favorite.albumart}/>
-    <div className="favorite-title">{favorite.artist} - {favorite.title}</div>
-  </li>
-);
+FavoritesList.propTypes = {
+  favoriteAlbums: PropTypes.array,
+  onFavoriteClick: PropTypes.func.isRequired
+};
 
 export default FavoritesList;

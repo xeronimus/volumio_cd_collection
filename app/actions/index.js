@@ -13,13 +13,19 @@ import {
   FAVORITES_LOADED,
   CURRENT_VIEW,
   TOGGLE_TIMR_COUNTDOWN,
-  TOGGLE_TRACKLIST
+  TOGGLE_TRACKLIST,
+  LOCK_UI,
+  UILOCK_DIGIT,
+  UILOCK_DIGIT_CLEAR
 } from '../actions/types';
 
 let volumio;
+let lockUiIntervalId;
 
+const LOCKUI_CHECK_INTERVALL = 5000;
+const LOCKUI_LAST_ACTION_THRESHOLD = 10000;
 
-export const connectToBackend = () => (dispatch) => {
+export const connectToBackend = () => (dispatch, getState) => {
 
   dispatch({type: VOLUMIO_DISCONNECT});
 
@@ -28,9 +34,15 @@ export const connectToBackend = () => (dispatch) => {
   volumio.connect()
     .then(() => {
       dispatch({type: VOLUMIO_CONNECT});
-      // load favorites list
-      // github personal access token "volumio_cd_collection"    3d7efb621ecf8246d0470464c5a351f28cf6801c
 
+      // start checking for last action timestamp in order to lock UI if necessary
+      if (lockUiIntervalId) {
+        clearInterval(lockUiIntervalId);
+      }
+      lockUiIntervalId = setInterval(lockUiIfNecessary.bind(undefined, dispatch, getState), LOCKUI_CHECK_INTERVALL);
+      lockUiIfNecessary(dispatch, getState);
+
+      // load favorites list
       return axios.get('https://api.github.com/gists/210058969b7cf59c1aa7edf8e18eb279', {
         auth: {
           username: appConfig.gitHubAccessToken
@@ -51,10 +63,31 @@ export const connectToBackend = () => (dispatch) => {
 
 };
 
-export const volumioStateUpdate = (volumioState) => ({
-  type: VOLUMIO_STATE_UPDATE,
-  volumioState
-});
+
+/**
+ *
+ */
+function lockUiIfNecessary(dispatch, getState) {
+  log.debug('checking if we need to lock UI');
+
+  const state = getState();
+
+  if (state.volumio.volumioState.status === 'play') {
+    return;
+  }
+
+  const diffMs = Date.now() - state.lastActionTimestamp;
+  if (diffMs > LOCKUI_LAST_ACTION_THRESHOLD) { // if time passed since last action is more than threshold -> lock UI
+    dispatch(lockUi());
+  }
+}
+
+export const volumioStateUpdate = (volumioState) => (dispatch) => {
+  dispatch({
+    type: VOLUMIO_STATE_UPDATE,
+    volumioState
+  });
+};
 
 export const volumioQueueUpdate = (volumioQueue) => ({
   type: VOLUMIO_QUEUE_UPDATE,
@@ -80,6 +113,17 @@ export const toggleTimrCountdown = () => ({
 });
 export const toggleTracklist = () => ({
   type: TOGGLE_TRACKLIST
+});
+
+export const lockUi = () => ({
+  type: LOCK_UI
+});
+export const uiLockDigit = (digit) => ({
+  type: UILOCK_DIGIT,
+  digit
+});
+export const uiLockDigitClear = () => ({
+  type: UILOCK_DIGIT_CLEAR
 });
 
 export const jumpToQueuePosition = (index) => () => {

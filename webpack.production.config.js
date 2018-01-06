@@ -19,7 +19,7 @@ module.exports = (env) => {
     })
   });
 
-  const config = {
+  return {
     devtool: 'cheap-module-source-map',
 
     entry: [
@@ -138,8 +138,7 @@ module.exports = (env) => {
           ],
         },
       ]
-    },
+    }
   };
 
-  return config;
 };

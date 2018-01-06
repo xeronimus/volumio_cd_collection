@@ -1,5 +1,9 @@
 import React from 'react';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import formatDate from 'date-fns/format';
+
+import {toggleTimrCountdown} from '../actions';
 
 class Timr extends React.Component {
 
@@ -17,7 +21,7 @@ class Timr extends React.Component {
   }
 
   onSeekUpdate(seek, pause) {
-    if (typeof  seek === 'undefined') {
+    if (typeof seek === 'undefined') {
       return;
     }
     this.timeLastStateUpdate = Date.now();
@@ -46,20 +50,19 @@ class Timr extends React.Component {
     }, 500);
   }
 
-
   componentWillReceiveProps(nextProps) {
-    if (this.props.seek !== nextProps.seek) {
+    if (this.props.seek !== nextProps.seek || this.props.pause !== nextProps.pause) {
       this.onSeekUpdate(nextProps.seek, nextProps.pause);
     }
   }
 
   render() {
 
-    const {countdown, duration, onTimrClick} = this.props;
+    const {countdown, duration, toggleTimrCountdown} = this.props;
     const {seek} = this.state;
 
     return (
-      <div className="timr" onClick={onTimrClick}>
+      <div className="timr" onClick={toggleTimrCountdown}>
         {
           !countdown &&
           formatDate(new Date(seek), 'mm:ss')
@@ -74,4 +77,20 @@ class Timr extends React.Component {
 
 }
 
-export default Timr;
+Timr.propTypes = {
+  seek: PropTypes.number,
+  pause: PropTypes.bool,
+  duration: PropTypes.number,
+  countdown: PropTypes.bool,
+  toggleTimrCountdown: PropTypes.func.isRequired
+};
+
+export default connect(
+  (state) => ({
+    seek: state.volumio.volumioState.seek,
+    pause: state.volumio.volumioState.status !== 'play',
+    duration: state.volumio.volumioState.duration,
+    countdown: state.uiState.timrCountdown
+  }),
+  {toggleTimrCountdown}
+)(Timr);

@@ -1,6 +1,7 @@
 import Promise from 'bluebird';
 import {bindActionCreators} from 'redux';
 import io from 'socket.io-client';
+import log from 'loglevel';
 
 import appConfig from './appConfig';
 
@@ -43,11 +44,11 @@ export function initialize(dispatch) {
 
       socket.on('connect', () => {
         // make sure we get the current volumio state
-        socket.emit('getState');
-        socket.emit('getQueue');
+        command('getState');
+        command('getQueue');
 
         // fetch all albums from the volumio library
-        socket.emit('browseLibrary', {
+        command('browseLibrary', {
           uri: 'albums://'
         });
 
@@ -70,6 +71,7 @@ export function initialize(dispatch) {
   }
 
   function command(command, payload) {
+    log.debug('sending command to Backend', command, payload);
     volumio.socket.emit(command, payload);
   }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import PlayerView from './PlayerView';
@@ -54,12 +55,18 @@ class App extends React.Component {
 
 }
 
+App.propTypes = {
+  currentView: PropTypes.string,
+  volumioConnected: PropTypes.bool,
+  volumioConnectError: PropTypes.string,
+  connectToBackend: PropTypes.func.isRequired
+};
 
 export default connect(
   (state) => ({
-    currentView: state.currentView,
-    volumioConnected: state.volumioConnected,
-    volumioConnectError: state.volumioConnectError
+    currentView: state.uiState.currentView,
+    volumioConnected: state.volumio.volumioConnected,
+    volumioConnectError: state.volumio.volumioConnectError
   }),
   {connectToBackend}
 )(App);
