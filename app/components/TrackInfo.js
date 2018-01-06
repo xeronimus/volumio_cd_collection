@@ -10,8 +10,8 @@ import CoverImg from '../components/CoverImg';
 const TrackInfo = ({artist, album, title, albumart, toggleTracklist}) => {
   return (
     <div className="column trackinfo">
-      <div className="artist album">{artist} - {album}</div>
-      <div className="title">{title}</div>
+      <div className="line-one"><span className="nowrap">{artist}</span> - <span className="nowrap">{title}</span></div>
+      <div className="line-two"><span className="nowrap">{album}</span></div>
       <CoverImg albumArt={albumart} onClick={toggleTracklist}/>
     </div>
   );

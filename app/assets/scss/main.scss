@@ -25,6 +25,10 @@ a {
   background-color: rgba(0, 0, 0, .4);
 }
 
+.nowrap {
+  white-space: nowrap;
+}
+
 button.pure-button {
   font-size: 34px;
   padding: 6px;
@@ -136,7 +140,7 @@ button.pure-button {
 
 .volume-bar {
 
-  width: 150px;
+  width: 100%;
   height: 8px;
   background: rgba(0, 0, 0, 0.2);
 
@@ -159,14 +163,15 @@ button.pure-button {
   }
 
   .column {
-    padding: 20px 40px;
+    padding: 20px;
+    box-sizing: border-box;
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
   }
   .column.right-column, .column.left-column {
-    width: 124px;
+    width: 160px;
   }
   .column.right-column {
     flex-direction: column;
@@ -184,11 +189,11 @@ button.pure-button {
   .trackinfo {
     flex-grow: 1;
 
-    .album, .artist, .title {
+    .line-one, .line-two {
       @include shadowed();
     }
 
-    .album, .artist {
+    .line-one {
       color: $green;
     }
 
@@ -209,7 +214,7 @@ button.pure-button {
   display: flex;
   justify-content: center;
   align-items: center;
-  @include shadowed();
+  background-color: rgba(0, 0, 0, 0.7);
 
   .digits {
     display: flex;
