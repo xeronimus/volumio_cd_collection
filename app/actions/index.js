@@ -68,7 +68,7 @@ export const connectToBackend = () => (dispatch, getState) => {
  *
  */
 function lockUiIfNecessary(dispatch, getState) {
-  log.debug('checking if we need to lock UI');
+  log.trace('checking if we need to lock UI');
 
   const state = getState();
 

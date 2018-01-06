@@ -5,10 +5,11 @@ import {AppContainer} from 'react-hot-loader';
 import log from 'loglevel';
 
 import App from './views/App';
+import appConfig from './services/appConfig';
 import initialState from './store/initialState';
 import configureStore from './store/configureStore';
 
-log.setLevel('debug');
+log.setLevel(appConfig.env === 'dev' ? 'debug' : 'info');
 
 const store = configureStore(initialState);
 
