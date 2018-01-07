@@ -39,16 +39,8 @@ export function initialize(dispatch) {
     return new Promise((resolve, reject) => {
 
       socket.on('connect_error', (err) => reject(new Error(err)));
-
       socket.on('connect_timeout', (err) => reject(new Error(err)));
-
-      socket.on('connect', () => {
-        // make sure we get the current volumio state
-        command('getState');
-        command('getQueue');
-        resolve();
-      });
-
+      socket.on('connect', () => resolve());
       socket.on('pushState', actions.volumioStateUpdate);
       socket.on('pushQueue', actions.volumioQueueUpdate);
       socket.on('pushBrowseLibrary', actions.volumioPushBrowseLibrary);

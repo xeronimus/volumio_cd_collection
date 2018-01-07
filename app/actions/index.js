@@ -25,6 +25,7 @@ let lockUiIntervalId;
 const LOCKUI_CHECK_INTERVALL = 5000;
 const LOCKUI_LAST_ACTION_THRESHOLD = 10000;
 
+
 export const connectToBackend = () => (dispatch, getState) => {
 
   dispatch({type: VOLUMIO_DISCONNECT});
@@ -35,45 +36,79 @@ export const connectToBackend = () => (dispatch, getState) => {
     .then(() => {
       dispatch({type: VOLUMIO_CONNECT});
 
-      // start checking for last action timestamp in order to lock UI if necessary
-      if (lockUiIntervalId) {
-        clearInterval(lockUiIntervalId);
-      }
-      lockUiIntervalId = setInterval(lockUiIfNecessary.bind(undefined, dispatch, getState), LOCKUI_CHECK_INTERVALL);
-      lockUiIfNecessary(dispatch, getState);
+      // make sure we get the current volumio state & queue
+      volumio.command('getState');
+      volumio.command('getQueue');
 
-      // load favorites list
-      return axios.get('https://api.github.com/gists/210058969b7cf59c1aa7edf8e18eb279', {
-        auth: {
-          username: appConfig.gitHubAccessToken
-        }
-      });
+      // start checking for last action timestamp in order to lock UI if necessary
+      startCheckingLockUi(dispatch, getState);
+
+      return loadFavoritesListFromGist();
 
     })
-    .then((favoritesResponse) => {
-      if (favoritesResponse.status !== 200) {
-        // TODO: inform user?  toast message?
-        log.error('Could not fetch favorites from gist / github', favoritesResponse.status);
+    .then((gistResponse) => {
+      if (gistResponse.status !== 200) {
+        log.error('Could not fetch favorites from gist / github', gistResponse.status);
+        return;
       }
 
-      const favListFromGist = JSON.parse(favoritesResponse.data.files['christina.json'].content);
-      dispatch({type: FAVORITES_LOADED, data: favListFromGist});
-
-      // fetch library information (title, artist, albumart) from volumio library for every uri in the favoriteList
-      favListFromGist.forEach((fav) => volumio.command('browseLibrary', {uri: fav}));
+      processFavoritesList(gistResponse, dispatch);
     })
     .catch((error) => dispatch({type: VOLUMIO_CONNECT_ERROR, error}));
 
 };
 
+/**
+ *
+ * @param gistResponse
+ * @param dispatch
+ */
+function processFavoritesList(gistResponse, dispatch) {
+
+  const favListFromGist = JSON.parse(gistResponse.data.files['christina.json'].content);
+  dispatch({type: FAVORITES_LOADED, data: favListFromGist});
+
+  // fetch metadata (title, artist, albumart) from volumio library for every uri in the favoriteList
+  favListFromGist.forEach((fav, index) => setTimeout(() => volumio.command('browseLibrary', {uri: fav}), index * 200));
+}
 
 /**
  *
+ */
+function loadFavoritesListFromGist() {
+  return axios.get('https://api.github.com/gists/210058969b7cf59c1aa7edf8e18eb279', {
+    auth: {
+      username: appConfig.gitHubAccessToken
+    }
+  });
+}
+
+/**
+ *
+ * @param dispatch
+ * @param getState
+ */
+function startCheckingLockUi(dispatch, getState) {
+  if (lockUiIntervalId) {
+    clearInterval(lockUiIntervalId);
+  }
+  lockUiIntervalId = setInterval(lockUiIfNecessary.bind(undefined, dispatch, getState), LOCKUI_CHECK_INTERVALL);
+  lockUiIfNecessary(dispatch, getState);
+}
+
+/**
+ *
+ * @param dispatch
+ * @param getState
  */
 function lockUiIfNecessary(dispatch, getState) {
   log.trace('checking if we need to lock UI');
 
   const state = getState();
+
+  if (state.uiState.uiIsLocked) {
+    return;
+  }
 
   if (state.volumio.volumioState.status === 'play') {
     return;
@@ -110,14 +145,12 @@ export const setCurrentView = (view) => ({
   type: CURRENT_VIEW,
   view
 });
-
 export const toggleTimrCountdown = () => ({
   type: TOGGLE_TIMR_COUNTDOWN
 });
 export const toggleTracklist = () => ({
   type: TOGGLE_TRACKLIST
 });
-
 export const lockUi = () => ({
   type: LOCK_UI
 });
