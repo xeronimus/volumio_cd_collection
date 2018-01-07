@@ -10,15 +10,15 @@ import {setCurrentView} from '../actions';
 /**
  *
  */
-const LibraryView = ({favoriteAlbums, playUri, setCurrentView}) => {
+const LibraryView = ({favorites, playUri, setCurrentView}) => {
 
   return (
     <div className="view library-view">
 
       <LibraryTopBar />
 
-      {favoriteAlbums && favoriteAlbums.length &&
-      <FavoritesList favoriteAlbums={favoriteAlbums} onFavoriteClick={onFavoriteClick}/>
+      {favorites && favorites.length &&
+      <FavoritesList favorites={favorites} onFavoriteClick={onFavoriteClick}/>
       }
     </div>
   );
@@ -31,14 +31,14 @@ const LibraryView = ({favoriteAlbums, playUri, setCurrentView}) => {
 };
 
 LibraryView.propTypes = {
-  favoriteAlbums: PropTypes.array,
+  favorites: PropTypes.array,
   playUri: PropTypes.func.isRequired,
   setCurrentView: PropTypes.func.isRequired
 };
 
 export default connect(
   (state) => ({
-    favoriteAlbums: state.volumio.favoriteAlbums,
+    favorites: state.volumio.favorites,
   }),
   {playUri, setCurrentView}
 )(LibraryView);

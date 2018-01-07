@@ -9,7 +9,7 @@ import {
   volumioStateUpdate,
   volumioQueueUpdate,
   volumioDisconnect,
-  volumioAlbumList
+  volumioPushBrowseLibrary
 } from '../actions';
 
 /**
@@ -21,7 +21,7 @@ export function initialize(dispatch) {
     volumioStateUpdate,
     volumioQueueUpdate,
     volumioDisconnect,
-    volumioAlbumList
+    volumioPushBrowseLibrary
   }, dispatch);
 
   const volumio = {
@@ -46,24 +46,12 @@ export function initialize(dispatch) {
         // make sure we get the current volumio state
         command('getState');
         command('getQueue');
-
-        // fetch all albums from the volumio library
-        command('browseLibrary', {
-          uri: 'albums://'
-        });
-
-
         resolve();
       });
 
       socket.on('pushState', actions.volumioStateUpdate);
       socket.on('pushQueue', actions.volumioQueueUpdate);
-
-      socket.on('pushBrowseLibrary', (volumioLibrary) => {
-        const sanitizedAlbumList = volumioLibrary.navigation.lists[0].items.filter((item) => (item.service === 'mpd'));
-        actions.volumioAlbumList(sanitizedAlbumList);
-      });
-
+      socket.on('pushBrowseLibrary', actions.volumioPushBrowseLibrary);
       socket.on('disconnect', () => actions.volumioDisconnect);
 
     });

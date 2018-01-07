@@ -1,6 +1,5 @@
-import filterForFavorites from '../services/filterForFavorites';
 import {
-  VOLUMIO_ALBUM_LIST,
+  VOLUMIO_PUSH_BROWSE_LIBRARY,
   VOLUMIO_CONNECT,
   VOLUMIO_CONNECT_ERROR,
   VOLUMIO_DISCONNECT,
@@ -12,38 +11,35 @@ import {
 export default function volumioReducer(state = {}, action) {
   switch (action.type) {
 
-    case VOLUMIO_ALBUM_LIST: {
-      if (state.favorites) {
-        const modifiedState = {
-          ...state,
-          favoriteAlbums: filterForFavorites(action.volumioAlbumList, state.favorites),
-        };
-        delete modifiedState.favorites;
-        return modifiedState;
-      } else {
-        return {
-          ...state,
-          volumioAlbumList: action.volumioAlbumList
-        };
-      }
+    case FAVORITES_LOADED: {
+      return {
+        ...state,
+        favorites: action.data
+      };
     }
 
-    case FAVORITES_LOADED: {
-      const favorites = JSON.parse(action.data['christina.json'].content);
+    case VOLUMIO_PUSH_BROWSE_LIBRARY : {
 
-      if (state.volumioAlbumList) {
-        const modifiedState = {
-          ...state,
-          favoriteAlbums: filterForFavorites(state.volumioAlbumList, favorites)
-        };
-        delete modifiedState.volumioAlbumList;
-        return modifiedState;
-      } else {
+      const libraryData = action.data;
+
+      // check if pushed data matches one of our favorites
+      const itemInfo = libraryData.navigation.info;
+
+      const newFavorites = state.favorites.map((fav) => {
+        if (fav !== itemInfo.uri) {
+          // This isn't the fav we care about - keep it as-is
+          return fav;
+        }
         return {
-          ...state,
-          favorites
+          ...itemInfo,
+          title: itemInfo.title ? itemInfo.title : itemInfo.album
         };
-      }
+      });
+
+      return {
+        ...state,
+        favorites: newFavorites
+      };
     }
 
     case VOLUMIO_CONNECT:

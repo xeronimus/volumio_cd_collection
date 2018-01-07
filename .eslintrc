@@ -37,7 +37,5 @@
     "react/prop-types": 1
   },
   "globals": {
-    "__POINZ_CONFIG__": false,
-    "beforeEach": false
   }
 }

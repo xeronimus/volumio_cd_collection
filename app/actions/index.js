@@ -9,7 +9,7 @@ import {
   VOLUMIO_DISCONNECT,
   VOLUMIO_STATE_UPDATE,
   VOLUMIO_QUEUE_UPDATE,
-  VOLUMIO_ALBUM_LIST,
+  VOLUMIO_PUSH_BROWSE_LIBRARY,
   FAVORITES_LOADED,
   CURRENT_VIEW,
   TOGGLE_TIMR_COUNTDOWN,
@@ -51,15 +51,18 @@ export const connectToBackend = () => (dispatch, getState) => {
 
     })
     .then((favoritesResponse) => {
-      if (favoritesResponse.status === 200) {
-        dispatch({type: FAVORITES_LOADED, data: favoritesResponse.data.files});
-      } else {
+      if (favoritesResponse.status !== 200) {
         // TODO: inform user?  toast message?
         log.error('Could not fetch favorites from gist / github', favoritesResponse.status);
       }
+
+      const favListFromGist = JSON.parse(favoritesResponse.data.files['christina.json'].content);
+      dispatch({type: FAVORITES_LOADED, data: favListFromGist});
+
+      // fetch library information (title, artist, albumart) from volumio library for every uri in the favoriteList
+      favListFromGist.forEach((fav) => volumio.command('browseLibrary', {uri: fav}));
     })
     .catch((error) => dispatch({type: VOLUMIO_CONNECT_ERROR, error}));
-
 
 };
 
@@ -94,9 +97,9 @@ export const volumioQueueUpdate = (volumioQueue) => ({
   volumioQueue
 });
 
-export const volumioAlbumList = (volumioAlbumList) => ({
-  type: VOLUMIO_ALBUM_LIST,
-  volumioAlbumList
+export const volumioPushBrowseLibrary = (data) => ({
+  type: VOLUMIO_PUSH_BROWSE_LIBRARY,
+  data
 });
 
 export const volumioDisconnect = () => ({

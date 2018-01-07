@@ -7,17 +7,25 @@ import FavoritesListItem from './FavoritesListItem';
 /**
  *
  */
-const FavoritesList = ({favoriteAlbums, onFavoriteClick}) => {
+const FavoritesList = ({favorites, onFavoriteClick}) => {
 
-  const sortedFavorites = favoriteAlbums.sort((fA, fB) => fA.title.localeCompare(fB.title));
+  const sortedFavorites = favorites
+    .filter((fav) => (typeof fav !== 'string')) // if one of the favorites uri does not have a match in the volumio library.
+    .sort((fA, fB) => (fA.title.localeCompare(fB.title)));
 
   return (
     <div className="favoritesList">
       <Scrollbars autoHeight autoHeightMax={500}>
         <ul >
           {
-            sortedFavorites.map((favorite) => <FavoritesListItem key={favorite.uri} favorite={favorite}
-                                                                 onFavoriteClick={onFavoriteClick}/>)
+            sortedFavorites.map((favorite) => (
+                <FavoritesListItem
+                  key={favorite.uri}
+                  favorite={favorite}
+                  onFavoriteClick={onFavoriteClick}
+                />
+              )
+            )
           }
         </ul>
       </Scrollbars>
@@ -26,7 +34,7 @@ const FavoritesList = ({favoriteAlbums, onFavoriteClick}) => {
 };
 
 FavoritesList.propTypes = {
-  favoriteAlbums: PropTypes.array,
+  favorites: PropTypes.array,
   onFavoriteClick: PropTypes.func.isRequired
 };
 

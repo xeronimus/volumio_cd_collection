@@ -22,7 +22,7 @@ describe.skip('Timr Component', () => {
 
 
   it('should correctly update on property update', (done) => {
-    let seek = 1000;
+    const seek = 1000;
     const wrapper = shallow(<Timr seek={seek}/>);
     expect(wrapper.find('.timr').text()).toContain('00:01');
 
